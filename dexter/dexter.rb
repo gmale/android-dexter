@@ -62,7 +62,7 @@ def print_result()
 end
 
 init_dependencies
-
+puts "analyzing #{APK_FILE}...\n\n"
 Open3.popen3(cmd) do |stdin, stdout, stderr, wait_thr|
 	stdout.each_line do |line|
   		parse_dex_info line
