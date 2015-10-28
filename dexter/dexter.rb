@@ -21,7 +21,9 @@ def init_dependencies()
 	else
 		puts "initializing required files..."
 		# quietly build the JAR
-		Open3.popen3('cd ../dex-method-counts;ant jar')
+		Open3.popen3('cd ../dex-method-counts;ant jar') do |stdin, stdout, stderr, wait_thr|
+			stdin.close
+		end
 	end
 end
 
