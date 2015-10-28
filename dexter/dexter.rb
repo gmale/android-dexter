@@ -5,12 +5,25 @@ require 'open3'
 APK_FILE = ARGV[0]
 TAB_WIDTH = 4
 REGEX = Regexp.compile(/(\ +)([^<:]+): (\d+)/)
+DEX_COUNT_JAR="../dex-method-counts/build/jar/dex-method-counts.jar"
 
 cmd = "../dex-method-counts/dex-method-counts #{APK_FILE}"
 # cmd = "sed -n '104,111p' output.txt"
 $package_info = []
 $method_count_data = Hash.new
 $previous_tab_count = 0
+
+# Checks for the required files, as a convenience
+#
+def init_dependencies()
+	if File.exist?(DEX_COUNT_JAR)
+		puts "found required files"
+	else
+		puts "initializing required files..."
+		# quietly build the JAR
+		Open3.popen3('cd ../dex-method-counts;ant jar')
+	end
+end
 
 # Parses an individual line of output from the dex-method-count command
 # Params:
@@ -48,6 +61,7 @@ def print_result()
 		
 end
 
+init_dependencies
 
 Open3.popen3(cmd) do |stdin, stdout, stderr, wait_thr|
 	stdout.each_line do |line|
